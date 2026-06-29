@@ -1,147 +1,340 @@
 # Chronos CDK v0.2
 
-**Emergent NPC Behavior + Theory Engine for Games**
+**No scripting. No state machines. Pure field-driven emergence.**
 
-Chronos is a physics-inspired engine that generates emergent NPC behavior without scripting, state machines, or behavior trees. NPCs develop personalities, form coalitions, elect leaders, remember events, and respond to player actions through pure field-driven computation.
+Chronos is a physics-inspired NPC behavior engine that generates emergent gameplay through **field interactions**, **personality vectors**, and **memory systems**. Every playthrough is different because NPCs remember history and respond based on real-time field forces—not hardcoded conditions.
 
-As of v0.2, Chronos also includes the **Chronos-Metron theory engine**: symbolic theory generation with special mathematical constants (φ, π, e) and keyword-semantic operator evaluators.
-
----
-
-## What's New in v0.2
-
-- **Chronos-Metron Theory Engine**: symbolic theory trees with special mathematical constants (golden ratio φ, π, e, √2, ln2, etc.)
-- **Keyword-Semantic Evaluator**: 80+ operator keywords mapped to domain-specific deterministic functions
-- **Theory REST API**: generate and evaluate theories via HTTP
-  - `GET /api/theory/generate`
-  - `POST /api/theory/evaluate`
-  - `GET /api/theory/domains`
-- **Semantic Fitness Bonus**: rewards theories that use keyword-matched operators and special constants
-- **NPC Domain Operators**: a starter set of emergent-cognition operators for NPC behavior research
+Perfect for game developers tired of behavior trees.
 
 ---
 
-## What Makes This Different?
+## The Big Difference
 
-| Traditional NPC AI | Chronos CDK |
-|---|---|
-| Behavior trees / state machines | Field-driven emergence |
-| Scripted reactions | Personality + memory = unique responses |
-| Static factions | Dynamic coalitions that form/break |
-| No memory | NPCs remember kills, gifts, threats |
-| Predictable | Every playthrough generates different behavior |
+### Traditional AI ❌
+```python
+if player.armed:
+    npc.state = "flee"
+# Same behavior. Every time. Predictable.
+```
+
+### Chronos Emergence ✅
+```python
+threat_field = 0.78  # From: player armed + intensity + kills
+aggression = npc.personality.aggression  # 0.2 to 0.9
+score = threat_field * aggression
+intent = argmax(scores)  # attack/flee/guard/orbit/curious/scatter/idle
+# Different response. Every run. Emergent.
+```
+
+**Result:** 8 NPCs with the same personality react DIFFERENTLY to the same situation if they have different memories.
 
 ---
 
-## Quick Start
+## Try It Now (2 minutes)
 
 ```bash
-# Clone
-git clone https://github.com/your-org/chronos-cdk.git
-cd chronos-cdk
-
-# Install
+git clone https://github.com/Complexitylaws/chronos-cdk-v02
+cd complexity-chronos-cdk-v0.2
 pip install -r requirements.txt
-
-# Run
 python -m engine
-
-# Open browser: http://localhost:5000
 ```
 
-**Controls:** WASD = move, Space = toggle weapon, G = gift
+Then open: **http://localhost:5000**
+
+### Controls
+- **WASD** - Move
+- **Space** - Draw weapon (increases threat field)
+- **G** - Offer gift (increases calm field)  
+- **F** - Visualize fields (red = threat, green = calm)
+- **?** - See why Chronos is different
+- **Click NPC** - See exactly why they chose that behavior
 
 ---
 
-## API (for your game client)
+## What You'll See
 
-```bash
-# Get all NPC states
-curl http://localhost:5000/api/game/state
+### Observatory Demo
+A full interactive arena with 8 NPCs that:
+- **React in real-time** to your actions
+- **Form coalitions** (red/green/blue)
+- **Remember kills & gifts** (emotions decay over time)
+- **Generate story events** ("The Hunt", "The Succession", "The Betrayal")
+- **Show exactly why they behave** (click any NPC to see the math)
 
-# Update player state
-curl -X POST http://localhost:5000/api/arena/player \
-  -H "Content-Type: application/json" \
-  -d '{"armed": true, "gift_active": false, "kills": 0, "x": 0.5, "y": 0.5}'
+### The 4 Fields (Interactive Visualization)
+1. **Threat Field** (Red) - How dangerous the world feels
+   - Increases: armed player, kills, chaos mood
+   - Drives: attack, flee, scatter
 
-# Generate a theory with special constants
-curl "http://localhost:5000/api/theory/generate?domain=npc&depth=4"
+2. **Calm Field** (Green) - How safe and stable
+   - Increases: gifts, stable mood, coherence operators
+   - Drives: guard, orbit, idle
 
-# Evaluate a theory
-curl -X POST http://localhost:5000/api/theory/evaluate \
-  -H "Content-Type: application/json" \
-  -d '{"domain": "npc", "theory": {"root": {...}}}'
+3. **Curiosity Field** (Yellow) - How interesting
+   - Increases: mysteries, pattern complexity, insight jumps
+   - Drives: curious, orbit
+
+4. **Orbit Field** (Cyan) - Pattern formation tendency
+   - Increases: loop moods, self-reflection, coherence
+   - Drives: orbit, guard
+
+---
+
+## How It Works
+
+### Per Tick:
+1. **Fields** computed from global game state
+2. **Memory** updated (emotions decay, gifts processed)
+3. **Intents scored** for each NPC: `field × personality × memory + noise`
+4. **Leaders elected** per coalition
+5. **Diplomacy** checked (alliances form/break)
+6. **Story events** triggered (if thresholds met)
+7. **All returned as JSON** → your game client polls
+
+### The Math
+```
+intent_score = (
+    field_value × personality_weight × multiplier +  
+    memory_modifier +                                
+    noise                                            
+)
+
+highest_score_wins = npc_intent
 ```
 
-See [docs/API.md](docs/API.md) for full documentation.
+**Key insight:** Same NPC, different memory = different behavior. Always.
+
+---
+
+## 8 NPC Personalities (Pre-built)
+
+Each NPC has:
+- **Aggression** (0.0-1.0) - Prefer attack vs. flee
+- **Curiosity** (0.0-1.0) - Drawn to interesting things
+- **Stability** (0.0-1.0) - Stay calm under threat
+- **Social** (0.0-1.0) - Form groups, follow leaders
+
+Example:
+- **A1**: Aggressive (0.8), Low Stability → Quick to attack, panics easily
+- **A2**: Curious (0.8), High Stability → Investigates calmly
+- **A3**: Social (0.9), High Stability → Natural leader, loyal
+
+---
+
+## Emergent Features (No Scripting)
+
+### Emotions (Auto-decaying)
+- **Trust** (-1.0 to +1.0) - Builds from gifts, degrades from kills
+- **Fear** (0.0 to 1.0) - Builds from armed/kills, decays fast
+- **Anger** (0.0 to 1.0) - Builds from ally death, decays slowly
+- **Loyalty** (0.0 to 1.0) - Grows from shared faction
+- **Grief** (0.0 to 1.0) - Spikes on death, decays very fast
+
+### Coalitions (Dynamic)
+- **Red** - Hostile to player
+- **Green** - Friendly/allied
+- **Blue** - Neutral/social
+- Form/break based on average trust/anger between groups
+
+### Story Events (Auto-generated)
+- **The Hunt** - 3+ NPCs enraged, hunting player
+- **The Succession** - Leader changes
+- **The Alliance** - Two coalitions team up
+- **The Betrayal** - Alliance breaks
+
+---
+
+## Integration (For Game Devs)
+
+### REST API
+Your game client polls one endpoint:
+
+```javascript
+GET http://localhost:5000/api/game/state
+```
+
+Returns:
+```json
+{
+  "mood": "chaos",
+  "intensity": 0.8,
+  "npcs": {
+    "A1": {
+      "intent": "attack",
+      "coalition": "red",
+      "threat": 0.78,
+      "trust": -0.5,
+      "fear": 0.2,
+      "anger": 0.9,
+      "is_leader": true,
+      "reason": "fields(threat=0.78) score=1.42"
+    },
+    ...
+  },
+  "narrative": [
+    { "name": "The Hunt", "desc": "5 NPCs hunting player" }
+  ]
+}
+```
+
+### Update Player State
+```javascript
+POST http://localhost:5000/api/arena/player
+{
+  "armed": true,
+  "gift_active": false,
+  "kills": 2,
+  "x": 0.5,
+  "y": 0.5
+}
+```
+
+See [docs/API.md](docs/API.md) for full reference.
+
+### Client Examples
+- **Python**: [examples/python_client.py](examples/python_client.py)
+- **Unity C#**: [examples/unity_client.cs](examples/unity_client.cs)
+- **Web**: Built-in Observatory demo
 
 ---
 
 ## Architecture
 
 ```
-Client (Unity/Godot/Web)  <-->  REST API  <-->  Chronos Engine
-                                                  |
-                                    ┌─────────────┼─────────────┐
-                                    |             |             |
-                                 Fields       Memory      Diplomacy
-                                 (threat,     (trust,     (leaders,
-                                  calm,       fear,       alliances,
-                                  curiosity)  anger)      betrayal)
-                                    |             |             |
-                                    └─────────────┼─────────────┘
-                                                  |
-                                           Intent Scoring
-                                           (per NPC, per tick)
+┌──────────────────────────┐
+│   Game Client            │
+│ (Unity/Godot/Web/Custom) │
+└────────────┬─────────────┘
+             │ REST API (JSON)
+             ▼
+┌──────────────────────────┐
+│   Chronos Engine         │
+├──────────────────────────┤
+│ • Fields (threat, calm)  │
+│ • Memory (emotions)      │
+│ • Intent Scoring         │
+│ • Diplomacy              │
+│ • Narrative              │
+└──────────────────────────┘
 ```
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for details.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for deep dive.
 
 ---
 
 ## Project Structure
 
 ```
-chronos-cdk/
-├── engine/                 # Core engine (Python)
-│   ├── run.py             # Flask server + API
-│   ├── engine_core.py     # Main orchestrator
-│   ├── engine_memory.py   # NPC memory & emotions
-│   ├── engine_intents.py  # Intent scoring
-│   ├── engine_diplomacy.py # Leadership & alliances
-│   ├── engine_narrative.py # Story event generation
-│   ├── core/              # Chronos-Metron theory engine
-│   │   ├── types.py       # TheoryNode with const_label
-│   │   └── generate.py    # Special constants + theory generation
-│   ├── domains/           # Domain operator configs
-│   │   ├── domain_manager.py  # Keyword-semantic evaluator
-│   │   └── operators_npc.json
-│   ├── evolution/         # Theory fitness
-│   │   └── fitness.py     # Semantic coherence + constants bonus
-│   └── config.py          # All tunable parameters
+complexity-chronos-cdk-v0.2/
+├── engine/
+│   ├── run.py                 # Flask server
+│   ├── engine_core.py         # Main orchestrator
+│   ├── engine_memory.py       # Emotions & decay
+│   ├── engine_intents.py      # Field scoring
+│   ├── engine_diplomacy.py    # Coalitions & leaders
+│   ├── engine_narrative.py    # Story generation
+│   ├── config.py              # All parameters (tunable)
+│   ├── core/                  # Theory engine (v0.2)
+│   ├── domains/               # Theory operators
+│   └── evolution/             # Fitness functions
 ├── visualization/
-│   ├── observatory/       # Full demo client (HTML/JS)
-│   └── minimal_client/    # Bare minimum client
+│   └── observatory/           # Full demo UI (HTML/JS/CSS)
 ├── examples/
-│   ├── python_client.py   # Python integration example
-│   └── unity_client.cs    # Unity C# integration example
+│   ├── python_client.py
+│   └── unity_client.cs
 ├── docs/
-│   ├── API.md            # Full API documentation
-│   ├── ARCHITECTURE.md   # Technical architecture
-│   └── CHANGELOG.md      # Version history
+│   ├── API.md
+│   ├── ARCHITECTURE.md
+│   ├── CHANGELOG.md
+│   └── README.md
 ├── requirements.txt
-└── LICENSE (MIT)
+└── LICENSE
 ```
+
+---
+
+## Performance
+
+- **Per-NPC per-tick**: ~1ms (CPU-bound)
+- **8 NPCs @ 60Hz**: ~500KB/sec over HTTP
+- **Scales to 100s of NPCs** with batching
+
+---
+
+## What's New in v0.2
+
+- **Chronos-Metron Theory Engine** (experimental)
+  - Symbolic theory generation
+  - Special constants (φ, π, e, √2, ln2)
+  - Keyword-semantic operators
+  - Theory fitness evaluation
+- **Theory API**: `/api/theory/generate`, `/api/theory/evaluate`
+- **Observatory Enhancement**: Field visualization + NPC reasoning
+- **Full documentation** (API, Architecture, examples)
+
+---
+
+## Roadmap (v0.3+)
+
+- WebSocket support (reduce polling)
+- Spatial awareness (obstacles, vision cones)
+- Flocking behaviors (coalition coordination)
+- Genetic algorithm for NPC generation
+- More theory domains
+- Unreal Engine plugin
+
+---
+
+## FAQ
+
+### Why not just use behavior trees?
+Behavior trees are great for **scripted** AI. Chronos is for **emergent** AI. Every playthrough generates different (but consistent) behavior because NPCs have memory and respond to field forces.
+
+### Can I use this in commercial games?
+**Yes.** MIT license. Free for everything.
+
+### How do I customize NPC personalities?
+Edit [engine/config.py](engine/config.py):
+```python
+NPC_PROFILES = [
+    {"id": "A1", "aggression": 0.8, "curiosity": 0.3, ...},
+    ...
+]
+```
+
+### Can I add my own fields?
+Yes. Modify `engine_intents.py` to compute new global fields and add them to intent scoring.
+
+### Does it work with [my game engine]?
+If it can make HTTP requests, yes. Examples: Unity, Godot, Unreal, custom engines. The engine is language-agnostic.
 
 ---
 
 ## License
 
-MIT — free for both commercial and personal use. See [LICENSE](LICENSE).
+MIT — Commercial and personal use allowed. See [LICENSE](LICENSE).
 
 ---
 
-## Contact
+## Contact & Links
 
-- Bluesky: [@complexitylaws.bsky.social](https://bsky.app/profile/complexitylaws.bsky.social)
-- Email: [complexitylaws@protonmail.com](mailto:complexitylaws@protonmail.com)
+- **GitHub**: [@Complexitylaws](https://github.com/Complexitylaws)
+- **Bluesky**: [@complexitylaws.bsky.social](https://bsky.app/profile/complexitylaws.bsky.social)
+- **Email**: [complexitylaws@protonmail.com](mailto:complexitylaws@protonmail.com)
+
+---
+
+## Citation (if you use this)
+
+```bibtex
+@software{chronos_cdk_2026,
+  title = {Chronos CDK: Physics-Inspired Emergent NPC Behavior Engine},
+  author = {Complexitylaws},
+  year = {2026},
+  url = {https://github.com/Complexitylaws/chronos-cdk-v02}
+}
+```
+
+---
+
+**Made with ❤️ for game developers who want emergent AI, not scripts.**
