@@ -1,0 +1,68 @@
+/* Chronos CDK - Observatory v2 Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #050608; --panel: #060a14; --border: #1a2a4a;
+  --text: #c9d1d9; --dim: #484f58; --accent: #58a6ff;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; overflow: hidden; display: flex; height: 100vh; }
+#arena { flex: 1; position: relative; }
+#arena canvas { width: 100%; height: 100%; display: block; }
+
+/* Right Panel */
+#hud { width: 320px; background: var(--panel); border-left: 1px solid var(--border); overflow-y: auto; padding: 12px; font-size: 11px; }
+#hud-panel { margin-bottom: 12px; }
+.hud-section { margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.hud-title { color: var(--dim); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.hud-value { margin: 2px 0; }
+.mood { font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+/* NPC Cards */
+.npc-card { padding: 6px 8px; margin: 4px 0; background: rgba(10,20,40,0.6); border-radius: 4px; border: 1px solid var(--border); }
+.npc-id { font-weight: bold; font-size: 12px; }
+.intent-tag { padding: 1px 6px; border-radius: 3px; font-size: 9px; margin-left: 4px; }
+.intent-attack { background: #f85149; color: #000; }
+.intent-flee { background: #58a6ff; color: #000; }
+.intent-guard { background: #3fb950; color: #000; }
+.intent-orbit { background: #d2a8ff; color: #000; }
+.intent-scatter { background: #ffa657; color: #000; }
+.intent-curious { background: #ce93d8; color: #000; }
+.intent-idle { background: #555; color: #fff; }
+.coalition-tag { padding: 1px 5px; border-radius: 3px; font-size: 9px; margin-left: 3px; }
+.coalition-red { border: 1px solid #f85149; color: #f85149; }
+.coalition-green { border: 1px solid #3fb950; color: #3fb950; }
+.coalition-blue { border: 1px solid #58a6ff; color: #58a6ff; }
+.coalition-neutral { border: 1px solid #555; color: #555; }
+.hp-bar-bg { height: 3px; background: #1a2a3a; border-radius: 2px; margin-top: 4px; }
+.hp-bar { height: 100%; border-radius: 2px; transition: width 0.3s; }
+.npc-reason { font-size: 8px; color: var(--dim); margin-top: 2px; }
+
+/* Intent Legend */
+#intent-legend { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+#intent-legend span { padding: 2px 8px; border-radius: 3px; font-size: 10px; }
+
+/* Story Feed */
+.story-line { padding: 3px 0; font-size: 10px; border-bottom: 1px solid rgba(20,40,80,0.3); }
+.story-line.danger { color: #f85149; }
+.story-line.new { color: #58a6ff; }
+
+/* NPC Communication */
+.msg-line { padding: 2px 0; font-size: 9px; color: var(--dim); }
+.msg-from { color: #58a6ff; }
+.msg-to { color: #3fb950; }
+.msg-type { color: #d2a8ff; }
+
+/* Player Status */
+#player-status { padding: 6px 8px; background: rgba(10,20,40,0.6); border-radius: 4px; border: 1px solid var(--border); }
+
+/* Mood Banner */
+#mood-banner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; letter-spacing: 4px; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-align: center; }
+#mood-banner.show { opacity: 1; }
+#banner-sub { font-size: 12px; letter-spacing: 1px; opacity: 0.7; }
+
+/* Left Panel - Raw JSON */
+#left-panel { width: 220px; background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 8px; font-size: 9px; }
+#left-panel pre { white-space: pre-wrap; word-break: break-all; }
+.json-key { color: #79c0ff; }
+.json-str { color: #a5d6ff; }
+.json-num { color: #ffa657; }
+.json-bool { color: #d2a8ff; }

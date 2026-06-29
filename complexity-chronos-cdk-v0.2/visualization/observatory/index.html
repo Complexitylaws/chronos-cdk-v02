@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chronos NPC Arena - Observatory v2</title>
+<link rel="stylesheet" href="/static/style.css"/>
+<script>/* Controls: WASD=move, Space=weapon, G=gift */</script>
+</head>
+<body>
+<!-- Left: Raw Engine JSON -->
+<div id="left-panel">
+  <div class="hud-title">CHRONOS ENGINE STATE</div>
+  <div style="font-size:8px;color:var(--dim);margin-bottom:6px">live feed from /api/game/state</div>
+  <pre id="engine-json">{ connecting... }</pre>
+</div>
+
+<!-- Center: Arena Canvas -->
+<div id="arena">
+  <canvas id="canvas"></canvas>
+  <div id="mood-banner"><div id="banner-text"></div><div id="banner-sub"></div></div>
+</div>
+
+<!-- Right: HUD -->
+<div id="hud">
+  <div id="hud-panel">
+    <div class="hud-section">
+      <div class="hud-title">ENGINE STATUS</div>
+      <div class="hud-value mood" id="hud-mood">-</div>
+      <div class="hud-value">Fitness: <span id="hud-fitness">-</span></div>
+      <div class="hud-value">Niche: <span id="hud-niche">-</span></div>
+      <div class="hud-value">Generation: <span id="hud-gen">-</span></div>
+      <div class="hud-value">Discoveries: <span id="hud-disc">-</span></div>
+      <div class="hud-value">Operators: <span id="hud-ops">-</span></div>
+      <div class="hud-value">Planck: <span id="hud-planck">-</span></div>
+    </div>
+    <div class="hud-section">
+      <div class="hud-title">PLAYER</div>
+      <div id="player-status">-</div>
+    </div>
+    <div class="hud-section">
+      <div class="hud-title">NPC INTENTS (from engine)</div>
+      <div id="npc-list"></div>
+    </div>
+    <div class="hud-section">
+      <div class="hud-title">INTENT LEGEND</div>
+      <div id="intent-legend">
+        <span class="intent-tag intent-attack">attack</span>
+        <span class="intent-tag intent-flee">flee</span>
+        <span class="intent-tag intent-guard">guard</span>
+        <span class="intent-tag intent-orbit">orbit</span>
+        <span class="intent-tag intent-scatter">scatter</span>
+        <span class="intent-tag intent-curious">curious</span>
+        <span class="intent-tag intent-idle">idle</span>
+      </div>
+    </div>
+    <div class="hud-section">
+      <div class="hud-title">NPC COMMUNICATION</div>
+      <div id="msg-panel"></div>
+    </div>
+    <div class="hud-section">
+      <div class="hud-title">STORY FEED</div>
+      <div id="story-feed"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/main.js"></script>
+</body>
+</html>
