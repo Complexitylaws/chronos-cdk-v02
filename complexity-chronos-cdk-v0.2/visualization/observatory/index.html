@@ -5,20 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Chronos NPC Arena - Observatory v2</title>
 <link rel="stylesheet" href="/static/style.css"/>
-<script>/* Controls: WASD=move, Space=weapon, G=gift */</script>
 </head>
 <body>
-<!-- Left: Raw Engine JSON -->
+
+<!-- Header -->
+<div class="header">
+  <div class="header-content">
+    <h1 class="header-title">CHRONOS CDK v0.2</h1>
+    <p class="header-subtitle">Physics-Inspired Emergent NPC Behavior Engine</p>
+    <p class="header-desc">No scripting. No state machines. Pure field-driven emergence.</p>
+  </div>
+  <div class="header-controls">
+    <button id="field-toggle" class="btn btn-primary">Show Fields (F)</button>
+    <button id="info-toggle" class="btn btn-secondary">Info (?)</button>
+  </div>
+</div>
+
+<!-- Left: Raw Engine JSON & Info -->
 <div id="left-panel">
-  <div class="hud-title">CHRONOS ENGINE STATE</div>
-  <div style="font-size:8px;color:var(--dim);margin-bottom:6px">live feed from /api/game/state</div>
+  <div class="hud-title">ENGINE STATE</div>
+  <div style="font-size:8px;color:var(--text-dim);margin-bottom:6px">Live feed from /api/game/state</div>
   <pre id="engine-json">{ connecting... }</pre>
+  
+  <div id="info-section" style="display:none; margin-top: 16px;">
+    <div class="hud-title">WHY CHRONOS IS DIFFERENT</div>
+    <div class="info-box">
+      <h3>Traditional AI</h3>
+      <code>if (player.armed) {<br/>  npc.state = "flee"<br/>}</code>
+      <p>Hardcoded. Scripted. Same every time.</p>
+    </div>
+    <div class="info-box">
+      <h3>Chronos Emergence</h3>
+      <code>threat_field = 0.8<br/>aggression = 0.8<br/>score = threat × aggression<br/>intent = argmax(scores)</code>
+      <p>Physics-driven. Emergent. Different every run.</p>
+    </div>
+    <div class="info-box">
+      <h3>The 4 Fields</h3>
+      <ul style="margin-left: 12px; font-size: 0.8rem;">
+        <li><span style="color: #ff4b4b;">●</span> <strong>Threat</strong> - danger level (armed, kills, chaos)</li>
+        <li><span style="color: #4bff7a;">●</span> <strong>Calm</strong> - safety feeling (gifts, stable mood)</li>
+        <li><span style="color: #ffd54b;">●</span> <strong>Curiosity</strong> - interest (mysteries, patterns)</li>
+        <li><span style="color: #4bfff0;">●</span> <strong>Orbit</strong> - pattern formation (loops, coherence)</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <!-- Center: Arena Canvas -->
 <div id="arena">
-  <canvas id="canvas"></canvas>
-  <div id="mood-banner"><div id="banner-text"></div><div id="banner-sub"></div></div>
+  <div class="canvas-container">
+    <canvas id="canvas"></canvas>
+    <div id="mood-banner"><div id="banner-text"></div><div id="banner-sub"></div></div>
+    <div id="field-legend" style="display:none; position: absolute; bottom: 12px; left: 12px; font-size: 0.75rem;">
+      <div style="margin-bottom: 4px;"><span style="color: #ff4b4b;">■</span> Threat Field</div>
+      <div style="margin-bottom: 4px;"><span style="color: #4bff7a;">■</span> Calm Field</div>
+      <div><span style="color: #ffd54b;">■</span> Curiosity Field</div>
+    </div>
+  </div>
 </div>
 
 <!-- Right: HUD -->
@@ -34,14 +77,21 @@
       <div class="hud-value">Operators: <span id="hud-ops">-</span></div>
       <div class="hud-value">Planck: <span id="hud-planck">-</span></div>
     </div>
+    
     <div class="hud-section">
       <div class="hud-title">PLAYER</div>
       <div id="player-status">-</div>
+      <div style="font-size: 0.75rem; margin-top: 6px; color: var(--text-dim);">
+        <strong>Controls:</strong><br/>
+        WASD = move | Space = weapon | G = gift | F = fields | ? = info
+      </div>
     </div>
+    
     <div class="hud-section">
-      <div class="hud-title">NPC INTENTS (from engine)</div>
+      <div class="hud-title">NPC INTENTS</div>
       <div id="npc-list"></div>
     </div>
+    
     <div class="hud-section">
       <div class="hud-title">INTENT LEGEND</div>
       <div id="intent-legend">
@@ -54,10 +104,12 @@
         <span class="intent-tag intent-idle">idle</span>
       </div>
     </div>
+    
     <div class="hud-section">
       <div class="hud-title">NPC COMMUNICATION</div>
       <div id="msg-panel"></div>
     </div>
+    
     <div class="hud-section">
       <div class="hud-title">STORY FEED</div>
       <div id="story-feed"></div>
