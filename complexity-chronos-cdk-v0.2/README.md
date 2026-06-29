@@ -1,4 +1,4 @@
- Chronos CDK v0.2 — Client Development Kit
+Chronos CDK v0.2 — Client Development Kit
 The Chronos CDK is a lightweight developer kit containing the NPC Engine, Theory Wrapper, Semantic Evaluator, and API Server used for emergent NPC behavior, theory generation, and real‑time simulation.
 
 This repository contains the public CDK, not the private Chronos Core.
@@ -48,7 +48,7 @@ Python client
 
 Unity C# client
 
-❗ What’s NOT Included (Private)
+ What’s NOT Included (Private)
 This CDK does not contain the private Chronos Core:
 
 Attractor engine
@@ -73,7 +73,7 @@ Stability chains
 
 These components remain private and are not part of this repository.
 
-Quick Start
+ Quick Start
 bash
 # Clone
 git clone https://github.com/Complexitylaws/chronos-cdk-v02.git
