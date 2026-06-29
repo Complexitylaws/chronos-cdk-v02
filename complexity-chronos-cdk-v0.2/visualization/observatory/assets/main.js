@@ -1,11 +1,6 @@
 /**
  * Chronos CDK v0.2 - Observatory Frontend
- * Real-time NPC behavior visualization
- * 
- * Controls:
- *   WASD = move player
- *   Space = toggle weapon
- *   G = offer gift
+ * Real-time NPC behavior visualization with field display
  */
 
 const API_BASE = 'http://localhost:5000';
@@ -31,9 +26,14 @@ const playerStatusEl = document.getElementById('player-status');
 const npcListEl = document.getElementById('npc-list');
 const msgPanelEl = document.getElementById('msg-panel');
 const storyFeedEl = document.getElementById('story-feed');
+const fieldToggleBtn = document.getElementById('field-toggle');
+const infoToggleBtn = document.getElementById('info-toggle');
+const infoSection = document.getElementById('info-section');
+const fieldLegend = document.getElementById('field-legend');
 
 // Game state
 let currentState = null;
+let showFields = false;
 let playerState = {
   x: 0.5,
   y: 0.5,
@@ -50,6 +50,19 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
+
+// Toggle buttons
+fieldToggleBtn.addEventListener('click', () => {
+  showFields = !showFields;
+  fieldToggleBtn.style.background = showFields ? '#4bff7a' : '';
+  fieldToggleBtn.style.color = showFields ? '#050814' : '';
+  fieldLegend.style.display = showFields ? 'block' : 'none';
+});
+
+infoToggleBtn.addEventListener('click', () => {
+  infoSection.style.display = infoSection.style.display === 'none' ? 'block' : 'none';
+  infoToggleBtn.style.background = infoSection.style.display === 'none' ? '' : 'rgba(0,255,136,0.2)';
+});
 
 /**
  * Fetch current game state from engine
@@ -72,6 +85,25 @@ async function fetchGameState() {
 }
 
 /**
+ * Draw field heatmaps
+ */
+function drawFields() {
+  if (!currentState) return;
+  
+  const threat = currentState.npcs?.A1?.threat || 0;
+  const intensity = currentState.intensity || 0.5;
+  
+  // Threat field (red gradient)
+  ctx.fillStyle = `rgba(255, 75, 75, ${threat * 0.15})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Calm field (green gradient)
+  const calmField = 1 - (threat + intensity) / 2;
+  ctx.fillStyle = `rgba(75, 255, 122, ${calmField * 0.1})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
  * Render arena with NPCs
  */
 function render() {
@@ -80,6 +112,11 @@ function render() {
   // Clear
   ctx.fillStyle = '#0a0e1a';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Fields (if enabled)
+  if (showFields) {
+    drawFields();
+  }
 
   // Grid background
   ctx.strokeStyle = '#1f2336';
@@ -149,7 +186,7 @@ function render() {
     ctx.stroke();
     ctx.globalAlpha = 1.0;
 
-    // Emotion indicator (small bar under NPC)
+    // Emotion indicator
     const emotionY = y + NPC_RADIUS + 14;
     drawEmotionBar(x, emotionY, npc);
   });
@@ -195,17 +232,14 @@ function drawEmotionBar(x, y, npc) {
   const barWidth = 20;
   const barHeight = 2;
 
-  // Fear (red)
   ctx.fillStyle = '#ff4b4b';
   ctx.fillRect(x - barWidth/2, y, (npc.fear || 0) * barWidth, barHeight);
 
-  // Trust (green)
   if (npc.trust > 0) {
     ctx.fillStyle = '#4bff7a';
     ctx.fillRect(x - barWidth/2 + (npc.fear || 0) * barWidth, y, npc.trust * barWidth, barHeight);
   }
 
-  // Anger (orange)
   ctx.fillStyle = '#ff7a4b';
   ctx.fillRect(x - barWidth/2, y + 3, (npc.anger || 0) * barWidth, barHeight);
 }
@@ -333,6 +367,14 @@ window.addEventListener('keydown', (e) => {
     playerState.gift_active = !playerState.gift_active;
   }
 
+  if (key === 'f') {
+    fieldToggleBtn.click();
+  }
+
+  if (key === '?') {
+    infoToggleBtn.click();
+  }
+
   sendPlayerState();
 });
 
@@ -341,6 +383,5 @@ window.addEventListener('keydown', (e) => {
  */
 setInterval(fetchGameState, POLL_INTERVAL_MS);
 
-// Initial fetch
 console.log('[Observatory] Connecting to Chronos engine at', API_BASE);
 fetchGameState();
