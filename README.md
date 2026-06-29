@@ -51,7 +51,7 @@ The Observatory provides a real-time view of NPC behavior:
 - Player interaction
 - Dynamic stability / instability
 
-![Observatory Screenshot](docs/observatory_screenshot.png)
+<img width="1920" height="1200" alt="afbeelding" src="https://github.com/user-attachments/assets/78cde884-9615-491f-ab74-1f354bc49f7c" />
 
 ---
 
