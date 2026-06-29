@@ -1,114 +1,125 @@
- Chronos CDK v0.2 — Client Development Kit
-The Chronos CDK is a lightweight developer kit containing the NPC Engine, Theory Wrapper, Semantic Evaluator, and API Server used for emergent NPC behavior, theory generation, and real‑time simulation.
+# Chronos CDK v0.2 — Emergent NPC Intelligence Engine
 
-This repository contains the public CDK, not the private Chronos Core.
-It is designed for developers who want to integrate Chronos‑style NPC behavior into games, simulations, or research environments.
+Chronos CDK v0.2 is the public-facing development kit for the Chronos 
+NPC Intelligence Engine. It exposes the API layer, behavior modules, 
+and the Observatory demo, while the private core (evolution kernel, 
+attractor engine, stability logic) remains closed.
 
- What’s Included (Public)
-✔ NPC Domain
-Intent scoring
+This CDK is intended for researchers, AI-engineers, and game-engine 
+developers evaluating non-scripted, emergent NPC behavior.
 
-Memory & emotion model
+---
 
-Diplomacy (coalitions, leadership)
+## Why This Is Different
 
-Narrative event generation
+Chronos does not use behavior trees, GOAP, utility curves, or 
+hand-authored scripts.
 
-✔ Theory Wrapper
-Special constants (φ, π, e)
+NPC behavior emerges from memory, intent dynamics, diplomacy, narrative 
+pressure, and domain-driven evolution, exposed through a clean API.
 
-Tree generation (light version)
+The engine produces state trajectories and behavioral structures that 
+are not explicitly programmed — only constrained.
 
-Keyword‑semantic operator evaluator
+---
 
-Semantic coherence scoring
+## What the Engine Actually Finds
 
-✔ Evolution (Light)
-Fitness scoring
+Chronos searches for behavioral structures under domain pressure.
+Below is an example of a structure discovered during evolution
+(domain: cosmic_ray_biological_impact, v0.2):
 
-Constant bonus
+THRESHOLD_CROSSING_DYNAMICS( FEEDBACK_LOOP_RECONFIGURATION( FLUX_STRUCTURE_COUPLING(2.597, -1.61803398) ) ) fitness: 7.338
 
-Domain‑specific evaluation
 
-✔ API Server
-REST endpoints for game clients:
+This structure was not programmed. It was found.
 
-Code
-/api/game/state
-/api/arena/player
-/api/theory/generate
-/api/theory/evaluate
-✔ Visualization
-Observatory (HTML/JS)
+Evolutionary-discovered structures are statistically distinguishable 
+from random formulas of equal complexity (p < 0.0001, bootstrap 
+n=10,000, non-trivial trees n=1,110).
 
-Minimal client
+---
 
-✔ Examples
-Python client
+## Observatory Demo
 
-Unity C# client
+The Observatory provides a real-time view of NPC behavior:
 
- What’s NOT Included (Private)
-This CDK does not contain the private Chronos Core:
+- Intent switching
+- Coalition formation
+- Emotional state changes
+- Narrative events
+- Player interaction
+- Dynamic stability / instability
 
-Attractor engine
+![Observatory Screenshot](docs/observatory_screenshot.png)
 
-Multi‑domain evolution
+---
 
-Stability engine
+## Quick Start
 
-Multi‑scale memory
+Requires Python 3.10+
 
-Physics / Autonomous / Resilience domains
-
-Deep theory generator
-
-Discovery engine
-
-Domain fusion
-
-Stability chains
-
-φ‑attractor logic
-
-These components remain private and are not part of this repository.
-
-Quick Start
-bash
-# Clone
-git clone https://github.com/Complexitylaws/chronos-cdk-v02.git
+```bash
+git clone https://github.com/Complexitylaws/chronos-cdk-v02
 cd chronos-cdk-v02
-
-# Install
 pip install -r requirements.txt
-
-# Run API server
 python -m chronoscdk
 
-# Open browser
-http://localhost:5000
- Project Structure
-Code
-chronos-cdk-v02/
-├── chronoscdk/
-│   ├── engine_core.py
-│   ├── engine_intents.py
-│   ├── engine_memory.py
-│   ├── engine_diplomacy.py
-│   ├── engine_narrative.py
-│   ├── run.py
-│   ├── core/
-│   ├── domains/
-│   └── evolution/
-├── docs/
-├── examples/
-├── visualization/
-├── LICENSE
-└── requirements.txt
- License
-MIT — free for personal and commercial use.
-The private Chronos Core is not included in this license.
+Open: http://localhost:5000
 
- Contact
-For questions, collaboration, or research inquiries:
-Use GitHub Issues on this repository.
+You will see the live NPC arena.
+API Overview
+
+GET  /api/game/state
+POST /api/arena/player
+POST /api/theory/generate
+POST /api/theory/evaluate
+
+This allows external clients (Python, Unity, custom engines) to integrate Chronos NPC behavior directly.
+Architecture
+
+chronoscdk/
+  engine_core.py
+  engine_intents.py
+  engine_memory.py
+  engine_diplomacy.py
+  engine_narrative.py
+  core/
+  domains/
+  evolution/
+visualization/observatory/
+examples/
+docs/
+
+The private core is not included. The CDK provides the public modules required for integration and evaluation.
+Examples
+
+Python Client
+
+python examples/python_client.py
+
+Queries the engine, prints NPC state, and demonstrates basic interaction.
+
+Unity C# Client A Unity C# template is included as a starting point for game engine integration.
+Changelog
+
+v0.2
+
+    Added Observatory v2 (HTML/JS)
+    Added full REST API endpoints
+    Added domain manager and theory wrapper
+    Added diplomacy and narrative modules
+    Added special constants (φ, π, e) in evolution
+    Added keyword-semantic operator evaluator
+    Added Python client example
+    Improved engine structure and module separation
+
+License
+
+MIT — free for personal and commercial use. The private Chronos Core is not included in this license.
+Contact
+
+For research inquiries or collaboration: GitHub Issues
+email: complexitylaws@protonmail.com
+https://bsky.app/profile/complexitylaws.bsky.social
+
