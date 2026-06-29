@@ -1,68 +1,302 @@
-/* Chronos CDK - Observatory v2 Styles */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Chronos CDK v0.2 - Observatory Frontend */
+
 :root {
-  --bg: #050608; --panel: #060a14; --border: #1a2a4a;
-  --text: #c9d1d9; --dim: #484f58; --accent: #58a6ff;
+  --bg-dark: #050814;
+  --bg-panel: #0f1324;
+  --border: #262b3f;
+  --accent: #00ff88;
+  --accent-dim: #00ff8844;
+  --text: #e4e7f5;
+  --text-dim: #9ca0b8;
+  --red: #ff4b4b;
+  --blue: #4b9dff;
+  --yellow: #ffd54b;
 }
-body { background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; overflow: hidden; display: flex; height: 100vh; }
-#arena { flex: 1; position: relative; }
-#arena canvas { width: 100%; height: 100%; display: block; }
 
-/* Right Panel */
-#hud { width: 320px; background: var(--panel); border-left: 1px solid var(--border); overflow-y: auto; padding: 12px; font-size: 11px; }
-#hud-panel { margin-bottom: 12px; }
-.hud-section { margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-.hud-title { color: var(--dim); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-.hud-value { margin: 2px 0; }
-.mood { font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* NPC Cards */
-.npc-card { padding: 6px 8px; margin: 4px 0; background: rgba(10,20,40,0.6); border-radius: 4px; border: 1px solid var(--border); }
-.npc-id { font-weight: bold; font-size: 12px; }
-.intent-tag { padding: 1px 6px; border-radius: 3px; font-size: 9px; margin-left: 4px; }
-.intent-attack { background: #f85149; color: #000; }
-.intent-flee { background: #58a6ff; color: #000; }
-.intent-guard { background: #3fb950; color: #000; }
-.intent-orbit { background: #d2a8ff; color: #000; }
-.intent-scatter { background: #ffa657; color: #000; }
-.intent-curious { background: #ce93d8; color: #000; }
-.intent-idle { background: #555; color: #fff; }
-.coalition-tag { padding: 1px 5px; border-radius: 3px; font-size: 9px; margin-left: 3px; }
-.coalition-red { border: 1px solid #f85149; color: #f85149; }
-.coalition-green { border: 1px solid #3fb950; color: #3fb950; }
-.coalition-blue { border: 1px solid #58a6ff; color: #58a6ff; }
-.coalition-neutral { border: 1px solid #555; color: #555; }
-.hp-bar-bg { height: 3px; background: #1a2a3a; border-radius: 2px; margin-top: 4px; }
-.hp-bar { height: 100%; border-radius: 2px; transition: width 0.3s; }
-.npc-reason { font-size: 8px; color: var(--dim); margin-top: 2px; }
+body {
+  font-family: 'Courier New', monospace;
+  background: radial-gradient(circle at top, #151a33 0%, #050814 55%, #02030a 100%);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
 
-/* Intent Legend */
-#intent-legend { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
-#intent-legend span { padding: 2px 8px; border-radius: 3px; font-size: 10px; }
+/* Main Layout */
+#left-panel {
+  flex: 0 0 22%;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(15,19,36,0.8) 0%, rgba(5,8,20,0.6) 100%);
+}
 
-/* Story Feed */
-.story-line { padding: 3px 0; font-size: 10px; border-bottom: 1px solid rgba(20,40,80,0.3); }
-.story-line.danger { color: #f85149; }
-.story-line.new { color: #58a6ff; }
+#arena {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 12px;
+}
 
-/* NPC Communication */
-.msg-line { padding: 2px 0; font-size: 9px; color: var(--dim); }
-.msg-from { color: #58a6ff; }
-.msg-to { color: #3fb950; }
-.msg-type { color: #d2a8ff; }
+#hud {
+  flex: 0 0 24%;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(15,19,36,0.8) 0%, rgba(5,8,20,0.6) 100%);
+}
+
+/* Canvas */
+#canvas {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: radial-gradient(circle at center, #151a33 0%, #050814 70%);
+}
+
+#mood-banner {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#banner-text {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+  letter-spacing: 0.08em;
+}
+
+#banner-sub {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Titles & Sections */
+.hud-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin: 8px 0 4px 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 3px;
+}
+
+#engine-json {
+  font-size: 0.7rem;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #0b0f1a;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.hud-section {
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(11, 15, 26, 0.4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.hud-value {
+  font-size: 0.8rem;
+  margin: 3px 0;
+  color: var(--text-dim);
+}
+
+.hud-value.mood {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.hud-value span {
+  color: var(--text);
+}
+
+/* NPC List */
+#npc-list {
+  font-size: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.npc-item {
+  padding: 3px 4px;
+  background: #121629;
+  border-left: 3px solid var(--yellow);
+  border-radius: 2px;
+}
+
+.npc-item strong {
+  color: var(--accent);
+}
+
+.npc-item .intent {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+}
+
+/* Intent Tags */
+#intent-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.intent-tag {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.intent-attack {
+  background: var(--red);
+  color: white;
+}
+
+.intent-flee {
+  background: var(--blue);
+  color: white;
+}
+
+.intent-guard {
+  background: #7a4bff;
+  color: white;
+}
+
+.intent-orbit {
+  background: #4bfff0;
+  color: #050814;
+}
+
+.intent-scatter {
+  background: #ff7a4b;
+  color: white;
+}
+
+.intent-curious {
+  background: var(--yellow);
+  color: #050814;
+}
+
+.intent-idle {
+  background: var(--text-dim);
+  color: #050814;
+}
+
+/* Messages & Story */
+#msg-panel,
+#story-feed {
+  font-size: 0.75rem;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.msg-item,
+.story-item {
+  padding: 4px;
+  margin-bottom: 2px;
+  background: #0b0f1a;
+  border-left: 2px solid var(--accent-dim);
+  border-radius: 2px;
+}
+
+.msg-from {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.msg-content {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  margin-top: 1px;
+}
+
+.story-name {
+  color: var(--yellow);
+  font-weight: bold;
+}
+
+.story-desc {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  margin-top: 1px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
 
 /* Player Status */
-#player-status { padding: 6px 8px; background: rgba(10,20,40,0.6); border-radius: 4px; border: 1px solid var(--border); }
+#player-status {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
 
-/* Mood Banner */
-#mood-banner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; letter-spacing: 4px; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-align: center; }
-#mood-banner.show { opacity: 1; }
-#banner-sub { font-size: 12px; letter-spacing: 1px; opacity: 0.7; }
+#player-status .value {
+  color: var(--text);
+}
 
-/* Left Panel - Raw JSON */
-#left-panel { width: 220px; background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 8px; font-size: 9px; }
-#left-panel pre { white-space: pre-wrap; word-break: break-all; }
-.json-key { color: #79c0ff; }
-.json-str { color: #a5d6ff; }
-.json-num { color: #ffa657; }
-.json-bool { color: #d2a8ff; }
+/* Responsive */
+@media (max-width: 1200px) {
+  body {
+    flex-direction: column;
+  }
+
+  #left-panel,
+  #hud {
+    flex: 0 0 auto;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 180px;
+  }
+
+  #arena {
+    flex: 1;
+    min-height: 400px;
+  }
+}
